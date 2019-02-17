@@ -1,0 +1,12 @@
+.center {
+    margin: auto;
+    width: 45%;
+    color: red;
+}
+table, th, td {
+    border: 1px solid black;
+}
+.rowHeader {
+    color: red;
+    padding-left: 40%;
+}

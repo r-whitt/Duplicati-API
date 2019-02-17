@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>API Overview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="./main.css" />
+    <style>
+        .center {
+            margin: auto;
+            width: 45%;
+            color: red;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        .rowHeader {
+            color: red;
+            padding-left: 40%;
+        }
+    </style>
+</head>
+<body>
+    <h1 class='center'>API Overview</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th width="20%">Endpoint</th>
+                <th width="35%">Requirements</th>
+                <th>Example</th>
+            </tr>
+            <tr>
+                <td>/api/puppies</td>
+                <td>Nothing (soon Token)</td>
+                <td>/api/puppies</td>
+            </tr>
+            <tr>
+                <td>/api/puppies/:id</td>
+                <td>ID as a number</td>
+                <td>/api/puppies/1</td>
+            </tr>
+            <tr>
+                <td>/api/addPuppies</td>
+                <td>POST <br>
+                    dogName <br>
+                    Breed <br>
+                    Age <br>
+                    Sex <br>
+                    CertId (1 for none)
+                </td>
+                <td>POST: /api/addPuppies?dogName='Lassie'&Breed='Border_Collie'&Age=2&Sex=F&CertId=2</td>
+            </tr>
+            <tr>
+                <td>/api/updatePuppies/:id</td>
+                <td> 
+                    PUT <br>
+                    <span>All fields required</span> <br>
+                    id = dog id to update <br>
+                    dogName <br>
+                    Breed <br>
+                    Age <br>
+                    Sex <br>
+                    CertId
+                </td>
+                <td>
+                    PUT: /api/updatePuppies/1?dogName='Lassie'&Breed='Border_Collie'&Age=4&Sex=F&CertId=2
+                </td>
+            </tr>
+            <tr>
+                <td>/api/removePuppies/:id</td>
+                <td>
+                    DELETE
+                    id --> Id for the dog you want to delete
+                </td>
+                <td>
+                    DELETE: /api/removePuppies/1
+                </td>
+            </tr>
+            <tr>
+                <td class="rowHeader" colspan="3">Certs</td>
+            </tr>
+            <tr>
+                <td>/api/addCert</td>
+                <td>
+                    POST
+                    certName
+                    Description
+                </td>
+                <td>
+                    POST /api/addCert?certName='SeeingEyeDog'&Description='Helps Guide Blind People'
+                </td>
+            </tr>
+            <tr>
+                <td>/api/getAllCerts</td>
+                <td>None</td>
+                <td>/api/getAllCerts</td>
+            </tr>
+            <tr>
+                <td>/report/getCertDog/:id</td>
+                <td>
+                    GET
+                    id = Cert ID you want to see list of dogs
+                </td>
+                <td>
+                    /report/getCertDog/1
+                </td>
+            </tr>
+            <tr>
+                <td class="rowHeader" colspan="3">AUTHENTICATION</td>
+            </tr>
+            <tr>
+                <td>/auth/register</td>
+                <td>
+                    POST <br>
+                    fullname <br>
+                    email <br>
+                    roleID <br>
+                    password <br>
+                    orgID <br>
+                    REMINDER: Use Body > x-www-form-urlencoded in Postman
+                </td>
+                <td>
+                    POST: /auth/sign_in?fullname="Tester McTest"&email="test1@fake.com"&roleID=1&password="fakePassword"&orgid=1
+                </td>
+            </tr>
+            <tr>
+                <td>/auth/sign_in</td>
+                <td>
+                    POST <br>
+                    email <br>
+                    password <br>
+                    dontDelete - true=don't disable old tokens <br>
+                </td>
+                <td>
+                    POST: /auth/sign_in?email=test1@fake.com&password="fakePassword"
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

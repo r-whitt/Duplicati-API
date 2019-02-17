@@ -1,0 +1,1 @@
+DELETE FROM jwt WHERE useremail like ${email} and not jwtid = ${jwtid};

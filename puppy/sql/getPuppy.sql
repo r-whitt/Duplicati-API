@@ -1,0 +1,1 @@
+select * from pups where id = $1
