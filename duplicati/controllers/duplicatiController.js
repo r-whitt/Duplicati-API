@@ -2,9 +2,9 @@ function backupTestCheckins (req, res, next) {
     const path = req.path;
     const method = req.method;
     const data = req.body;
-    const parsedData = data.message.split('\r\n')
     console.log('duplicati testing backup checkins ' + path + ' method ' + method)
-    console.log('checkin packet: ' + '\n' + JSON.stringify(data))
+    parseDuplicatiReport(data)
+    //console.log('checkin packet: ' + '\n' + JSON.stringify(data))
     res.status(200)
         .json({
             status: 'success',
@@ -14,22 +14,31 @@ function backupTestCheckins (req, res, next) {
 };
 
 function parseDuplicatiReport (data) {
-    //insert parsing code here
-    const data = {
-        "message": "Duplicati Backup report for Testing\r\n\r\nDeletedFiles: 0\r\nDeletedFolders: 0\r\nModifiedFiles: 0\r\nExaminedFiles: 1\r\nOpenedFiles: 0\r\nAddedFiles: 0\r\nSizeOfModifiedFiles: 0\r\nSizeOfAddedFiles: 0\r\nSizeOfExaminedFiles: 10\r\nSizeOfOpenedFiles: 0\r\nNotProcessedFiles: 0\r\nAddedFolders: 0\r\nTooLargeFiles: 0\r\nFilesWithError: 0\r\nModifiedFolders: 0\r\nModifiedSymlinks: 0\r\nAddedSymlinks: 0\r\nDeletedSymlinks: 0\r\nPartialBackup: False\r\nDryrun: False\r\nMainOperation: Backup\r\nParsedResult: Success\r\nVersion: 2.0.4.5 (2.0.4.5_beta_2018-11-28)\r\nEndTime: 2/16/2019 10:23:51 PM (1550384631)\r\nBeginTime: 2/16/2019 10:23:50 PM (1550384630)\r\nDuration: 00:00:00.1900598"
+    const obj = {} //Obj to be sent to DB
+    const messageIndex = data.message.indexOf('\r')
+    //To Do: Add sucess & fail info before sending (like IP, Company/device backed up, User?, time of report, Success boolean?)
+    if (data.message[messageIndex + 4] == 'F') {
+        //Error Result
+        const failedIndex = data.message.indexOf('Failed')
+        const detailsIndex = data.message.indexOf('Details')
+        const logDataIndex = data.message.indexOf('Log data')
+        obj.newMessage = data.message.slice(0, messageIndex)
+        obj.failed = data.message.slice(failedIndex + 8, detailsIndex)
+        obj.details = data.message.slice(detailsIndex + 9, logDataIndex)
+        obj.logData = data.message.slice(logDataIndex + 11)
+        console.log('new obj parsed: ' + '\n' + JSON.stringify(obj))
+    } else {
+        //Success or Warning
+        const parsedData = data.message.split('\r\n') //adds each line as a new spot in the array
+        obj.newMessage = parsedData[0]
+        for (i = 1; i < parsedData.length; i++) {
+            if (parsedData[i].length > 0) {
+                const value = parsedData[i].split(': ')[1].trim()
+                obj[parsedData[i].split(':')[0].trim()] = value //This causes time to be cut off
+            }
+        }
+        console.log('new obj parsed: ' + '\n' + JSON.stringify(obj))
     }
-
-    console.log('raw data ' + data.message)
-    const parsedData = data.message.split('\r\n') //adds each line as a new spot in the array
-    console.log("parsed data" + JSON.stringify(parsedData[2]))
-    const obj = {}
-    console.log(parsedData[2].split(':')[1].trim())
-    obj[parsedData[2].split(':')[0].trim()] = parsedData[2].split(':')[1].trim() //parses parsed array even further to add each section as an obj key & value
-    //this obj will be able to be processed or sent to db
-    //should check each index in the parsed array to skip empty indexes
-
-    console.log('new obj parsed: ' + '\n' + JSON.stringify(obj))
-    //should loop through the results and parse if it isn't an empty string (for '\r\n\r\n' in the 2nd line)
 };
 
 //Duplicati-monitor URL: https://www.duplicati-monitoring.com/log/ClubSpeed/UnpMFKdvgf1adeI/8546

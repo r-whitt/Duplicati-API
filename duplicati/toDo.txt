@@ -1,0 +1,10 @@
+Duplicati DB scheme
+Add Endpoints to add data to DB
+Add some Test Data
+
+use JWT to decript some Org information from the passphrase
+	if not, Endpoint to add have params or segements with org name & information
+		/checkin/org/deviceID
+		/checking?org=test&deviceID=23433
+
+Will have to adjust DB/Endpoints as I go to adding Reports and get further in the Front End Dev
